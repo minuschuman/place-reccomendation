@@ -5,8 +5,10 @@ import numpy as np
 import scipy as sp
 from sklearn.metrics.pairwise import cosine_similarity
 import operator
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 with open('dataset/user_similarity.pkl', 'rb') as user_sim_file:
     user_similarity = pickle.load(user_sim_file)
@@ -56,8 +58,8 @@ def recommend_similar_user_recs(user_id):
             else:
                 most_common[j] = 1
     sorted_list = sorted(most_common.items(), key=operator.itemgetter(1), reverse=True)
-    top_recommendations = sorted_list[:5]
+    top_recommendations = sorted_list[:10]
     return jsonify({'similar_user_recs': top_recommendations})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5500, debug=True)
